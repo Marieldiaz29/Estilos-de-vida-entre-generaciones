@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Estilos de vida entre generaciones</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@400;600;800&display=swap">
+<style>
+:root{--bg:#e9eeea;--card:#fbfcfb;--ink:#15303a;--mute:#5a7077;--line:#c5d1cc;--acc:#e0a526;--acc-ink:#15303a;--sel:#15303a;--sel-ink:#fbfcfb;
+box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);color-scheme:light}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0f1d22;--card:#172b32;--ink:#e6efec;--mute:#9db3b3;--line:#2c444c;--acc:#e8b43c;--acc-ink:#15303a;--sel:#e6efec;--sel-ink:#0f1d22;color-scheme:dark}}
+:root[data-theme="dark"]{--bg:#0f1d22;--card:#172b32;--ink:#e6efec;--mute:#9db3b3;--line:#2c444c;--acc:#e8b43c;--acc-ink:#15303a;--sel:#e6efec;--sel-ink:#0f1d22;color-scheme:dark}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.55 "Bricolage Grotesque",system-ui,-apple-system,"Segoe UI",sans-serif}
+main{max-width:860px;margin:0 auto;padding:28px 18px 60px}
+h1{font-size:clamp(1.9rem,6vw,3rem);line-height:1.05;margin:0 0 10px;font-weight:800;letter-spacing:-.02em}
+.lead{color:var(--mute);max-width:60ch;margin:0 0 22px}
+.priv{background:var(--acc);color:var(--acc-ink);padding:10px 14px;border-radius:10px;font-weight:600;margin-bottom:22px}
+.tabs{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:18px}
+.tabs button{font:inherit;font-weight:600;border:2px solid var(--ink);background:transparent;color:var(--ink);padding:9px 14px;border-radius:999px;cursor:pointer}
+.tabs button[aria-selected="true"]{background:var(--sel);color:var(--sel-ink)}
+.tabs small{font-weight:400;opacity:.8}
+button:focus-visible,textarea:focus-visible,input:focus-visible{outline:3px solid var(--acc);outline-offset:2px}
+.head{display:flex;gap:14px;align-items:end;flex-wrap:wrap;margin-bottom:6px}
+.head h2{margin:0;font-size:1.5rem}
+label.age{display:flex;flex-direction:column;font-size:.9rem;color:var(--mute);gap:4px}
+input[type=number]{width:110px;font:inherit;padding:8px 10px;border:2px solid var(--line);border-radius:8px;background:var(--card);color:var(--ink)}
+.ctx{color:var(--mute);margin:0 0 16px}
+.q{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:14px 16px;margin-bottom:12px}
+.q label{display:block;font-weight:600;margin-bottom:4px}
+.q p{margin:0 0 8px;color:var(--mute);font-size:.92rem}
+textarea{width:100%;min-height:84px;resize:vertical;font:inherit;padding:10px;border:2px solid var(--line);border-radius:8px;background:var(--bg);color:var(--ink)}
+.bar{height:8px;background:var(--line);border-radius:8px;overflow:hidden;margin:6px 0 18px}
+.bar i{display:block;height:100%;background:var(--acc);width:0;transition:width .3s}
+.prog{font-size:.9rem;color:var(--mute)}
+.wrap{overflow-x:auto;border:1px solid var(--line);border-radius:12px;background:var(--card)}
+table{border-collapse:collapse;width:100%;min-width:680px;font-size:.92rem}
+th,td{border-bottom:1px solid var(--line);padding:10px 12px;text-align:left;vertical-align:top}
+th{background:var(--sel);color:var(--sel-ink);font-weight:600}
+td:first-child{font-weight:600;width:150px}
+.act{display:flex;gap:8px;flex-wrap:wrap;margin:16px 0}
+.act button{font:inherit;font-weight:600;padding:10px 16px;border-radius:10px;border:2px solid var(--ink);background:var(--acc);color:var(--acc-ink);cursor:pointer}
+.act button.sec{background:transparent;color:var(--ink)}
+.out{white-space:pre-line;background:var(--card);border:2px solid var(--acc);border-radius:12px;padding:16px;margin-top:8px}
+.toast{color:var(--mute);min-height:1.4em}
+@media print{.tabs,.act,.priv,.nav{display:none}.panel{display:block!important}body{background:#fff;color:#000}}
+</style>
+</head>
+<body>
+<main>
+<h1>Estilos de vida entre generaciones</h1>
+<div class="tabs nav" role="tablist" id="tabs"></div>
+<div id="panels"></div>
+</main>
+<script>
+var Q=[
+["Comida","¿Cómo se conseguía la comida en casa: mercado, tienda, súper o cultivo propio?"],
+["Ropa","¿Qué se hacía con la ropa o los zapatos viejos o rotos?"],
+["Electrónicos","¿Qué aparatos electrónicos tenías y cada cuánto los cambiabas?"],
+["Transporte","¿Cómo te transportabas a la escuela o al trabajo?"],
+["Basura","¿Qué se hacía con la basura? ¿Se separaba o se reutilizaba algo?"],
+["Desechables","¿Usabas bolsas, botellas o envases desechables?"],
+["Agua","¿Cómo se usaba y se cuidaba el agua en casa?"],
+["Lo necesario","¿Qué consideras necesario para vivir bien?"]];
+var P=[
+{id:"abu",t:"Abuelo o abuela",ctx:"Responde recordando cuando tenía entre 18 y 25 años."},
+{id:"pad",t:"Padre o madre",ctx:"Responde sobre su juventud, cuando tenía entre 18 y 25 años."},
+{id:"ami",t:"Amigo o amiga",ctx:"Responde sobre su presente, de tu misma edad."}];
+// PEGA AQUÍ la URL de tu webhook de Make
+const WEBHOOK_URL = "https://hook.eu1.make.com/3gpniqgtpk23outyicqv0jlppjc1udtx";
+var D={};
+try{D=JSON.parse(localStorage.getItem("entrevistas")||"{}")}catch(e){D={}}
+function save(){try{localStorage.setItem("entrevistas",JSON.stringify(D))}catch(e){}}
+function get(p){return D[p]||(D[p]={age:"",a:[]})}
+var cur="abu",tabs=document.getElementById("tabs"),panels=document.getElementById("panels");
+function esc(s){return String(s).replace(/[&<>"]/g,function(c){return{"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]})}
+function done(p){var d=get(p),n=0;Q.forEach(function(_,i){if((d.a[i]||"").trim())n++});return n}
+function build(){
+tabs.innerHTML="";panels.innerHTML="";
+P.concat([{id:"cmp",t:"Comparar"}]).forEach(function(p){
+var b=document.createElement("button");b.setAttribute("role","tab");b.dataset.id=p.id;
+b.innerHTML=esc(p.t)+(p.id!=="cmp"?' <small id="c-'+p.id+'"></small>':"");
+b.onclick=function(){cur=p.id;show()};tabs.appendChild(b);
+var s=document.createElement("section");s.className="panel";s.id="p-"+p.id;panels.appendChild(s);
+if(p.id==="cmp")return;
+var d=get(p.id),h='<div class="head"><h2>'+esc(p.t)+'</h2><label class="age">Edad actual<input type="number" min="1" max="120" inputmode="numeric" data-age="'+p.id+'" value="'+esc(d.age)+'"></label></div><p class="ctx">'+esc(p.ctx)+'</p><div class="prog" id="g-'+p.id+'"></div><div class="bar"><i id="b-'+p.id+'"></i></div>';
+Q.forEach(function(q,i){h+='<div class="q"><label for="'+p.id+i+'">'+(i+1)+". "+q[0]+'</label><p>'+q[1]+'</p><textarea id="'+p.id+i+'" data-p="'+p.id+'" data-i="'+i+'" placeholder="Escribe aquí la respuesta…">'+esc(d.a[i]||"")+'</textarea></div>'});
+s.innerHTML=h});
+document.querySelectorAll("textarea").forEach(function(t){t.oninput=function(){get(t.dataset.p).a[+t.dataset.i]=t.value;save();prog()}});
+document.querySelectorAll("[data-age]").forEach(function(t){t.oninput=function(){get(t.dataset.age).age=t.value;save();if(cur==="cmp")cmp()}});
+var c=document.getElementById("p-cmp");
+c.innerHTML='<p class="lead">Aquí se juntan las respuestas de las tres personas, tema por tema.</p><div class="wrap"><table id="tb"></table></div><div class="act"><button id="cp">Copiar resumen</button><button class="sec" id="pr">Imprimir</button><button class="sec" id="rs">Borrar todo</button></div><div class="toast" id="ts" aria-live="polite"></div><div class="act"><button id="ai">Comparar respuestas</button></div><div class="toast" id="st" aria-live="polite"></div><div id="out" class="out" hidden></div>';
+document.getElementById("ai").onclick=analizar;
+document.getElementById("cp").onclick=copy;document.getElementById("pr").onclick=function(){window.print()};
+document.getElementById("rs").onclick=function(){if(confirm("¿Borrar todas las respuestas? Esta acción no se puede deshacer.")){D={};save();build();show()}};
+prog()}
+function prog(){P.forEach(function(p){var n=done(p.id),g=document.getElementById("g-"+p.id);
+if(g)g.textContent=n+" de 8 preguntas respondidas";
+var b=document.getElementById("b-"+p.id);if(b)b.style.width=n/8*100+"%";
+var c=document.getElementById("c-"+p.id);if(c)c.textContent=n+"/8"})}
+function label(p){var a=get(p.id).age;return p.t+(a?" ("+a+" años)":"")}
+function cmp(){var h="<tr><th>Tema</th>"+P.map(function(p){return"<th>"+esc(label(p))+"</th>"}).join("")+"</tr>";
+Q.forEach(function(q,i){h+="<tr><td>"+q[0]+"</td>"+P.map(function(p){var v=(get(p.id).a[i]||"").trim();return"<td>"+(v?esc(v).replace(/\n/g,"<br>"):'<span style="color:var(--mute)">Sin respuesta</span>')+"</td>"}).join("")+"</tr>"});
+document.getElementById("tb").innerHTML=h}
+function copy(){var t="ENTREVISTAS: TRES GENERACIONES\n";
+Q.forEach(function(q,i){t+="\n"+(i+1)+". "+q[0].toUpperCase()+"\n";P.forEach(function(p){t+="- "+label(p)+": "+((get(p.id).a[i]||"").trim()||"Sin respuesta")+"\n"})});
+var ts=document.getElementById("ts");
+function ok(){ts.textContent="Resumen copiado. Pégalo en tu documento."}
+function fb(){var a=document.createElement("textarea");a.value=t;document.body.appendChild(a);a.select();try{document.execCommand("copy");ok()}catch(e){ts.textContent="No se pudo copiar. Selecciona la tabla y cópiala a mano."}document.body.removeChild(a)}
+if(navigator.clipboard&&navigator.clipboard.writeText){navigator.clipboard.writeText(t).then(ok,fb)}else fb()}
+
+function texto(p){var d=get(p.id),t="Edad: "+d.age;Q.forEach(function(q,i){t+="\n"+(i+1)+". "+q[1]+": "+(d.a[i]||"").trim()});return t}
+function analizar(){
+var st=document.getElementById("st"),out=document.getElementById("out"),btn=document.getElementById("ai");
+var falta=P.some(function(p){var d=get(p.id);return !String(d.age).trim()||Q.some(function(_,i){return !(d.a[i]||"").trim()})});
+if(falta){st.textContent="Faltan campos por llenar. Completa la edad y las 8 respuestas de las tres personas.";return}
+var body=new URLSearchParams();body.append("abuelo",texto(P[0]));body.append("padre",texto(P[1]));body.append("amigo",texto(P[2]));
+st.textContent="Analizando respuestas, esto puede tardar unos segundos...";btn.disabled=true;out.hidden=true;
+fetch(WEBHOOK_URL,{method:"POST",body:body}).then(function(r){if(!r.ok)throw 0;return r.text()}).then(function(t){out.textContent=t;out.hidden=false;st.textContent=""}).catch(function(){st.textContent="No se pudo obtener el análisis, intenta de nuevo."}).then(function(){btn.disabled=false})}
+function show(){document.querySelectorAll(".panel").forEach(function(s){s.style.display=s.id==="p-"+cur?"block":"none"});
+tabs.querySelectorAll("button").forEach(function(b){b.setAttribute("aria-selected",b.dataset.id===cur)});
+if(cur==="cmp")cmp();window.scrollTo(0,0)}
+build();show();
+</script>
+</body>
+</html>
